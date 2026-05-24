@@ -1,0 +1,55 @@
+---
+description: Enforces Flux multi-agent Flutter pipeline and MVVM architecture for all feature work
+globs: lib/**/*
+alwaysApply: true
+---
+
+# Flux Flutter Pipeline
+
+This project uses a **mandatory multi-agent pipeline** for feature development.
+
+## Pipeline (never skip)
+
+1. `flutter-task-writer` — technical task only, no code
+2. `flutter-implementation` — code from task only
+3. `flutter-code-review` — `APPROVED` or `CHANGES_REQUIRED` only
+4. `flutter-qa-test` — `PASSED` or `FAILED`; on fail → back to implementation
+
+Orchestrate with `flutter-pipeline-orchestrator` or `/flux` workflow.
+
+## Layout source
+
+All UI/layout references:
+
+`/Users/gabriellopes/Downloads/stitch_focus_flow_adhd/`
+
+- Design system: `serene_focus/DESIGN.md`
+- Screens: `*/code.html` per feature (see `.cursor/skills/flutter-pipeline/design-reference.md`)
+
+Never invent layouts without reading the Stitch HTML for that screen.
+
+## Architecture
+
+- MVVM + light Clean Architecture, feature-first under `lib/features/`
+- Offline-first: UI → ViewModel → UseCase → Repository → LocalDataSource → Isar
+- Navigation: `go_router`
+- Reference: `.cursor/skills/flutter-pipeline/architecture.md`
+
+## State (strict)
+
+**Allowed:** `ChangeNotifier`, `ValueNotifier`, `ListenableBuilder`, `ValueListenableBuilder`
+
+**Forbidden:** Provider, Riverpod, Bloc, MobX, GetX
+
+## Implementation rules
+
+- ViewModels: no widget imports, must `dispose()`
+- Widgets: small, `const` where possible, no logic in `build()`
+- Granular rebuilds only
+- No new packages without task authorization
+
+## Prohibitions
+
+- No code without `TASK_READY` document
+- No merge-ready work without review + `flutter analyze` + tests passing
+- No global architecture changes without explicit user authorization
